@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amber Interpreter</title>
+  <meta name="description" content="Online Amber interpreter - Run Amber code in your browser">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <img src="assets/amber-logo.svg" alt="Amber" class="logo-icon">
+        <span class="logo-text">amber</span>
+      </div>
+      <p class="subtitle">Online Interpreter</p>
+    </header>
+
+    <!-- Editor -->
+    <section class="editor-section">
+      <div class="editor-header">
+        <label for="source" class="editor-label">Source Code</label>
+        <span class="editor-hint">Ctrl+Enter to run</span>
+      </div>
+      <textarea 
+        id="source" 
+        class="editor" 
+        placeholder="Write your Amber code here..."
+        spellcheck="false"
+      >echo("hello world")</textarea>
+    </section>
+
+    <!-- Run Button -->
+    <button id="run" class="btn btn-primary" disabled>
+      <span class="btn-icon">▶</span>
+      <span>Run</span>
+    </button>
+
+    <!-- Output -->
+    <section class="output-section">
+      <div class="output-header">
+        <span class="output-label">Output</span>
+        <span id="status" class="status-badge loading">Booting...</span>
+      </div>
+      <p id="boot-tip" class="boot-tip">Booting a Linux VM in your browser to run Amber...</p>
+      <pre id="result" class="output"></pre>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Powered by <a href="https://amber-lang.com" target="_blank">Amber</a> • 
+         <a href="https://docs.amber-lang.com" target="_blank">Documentation</a> • 
+         <a href="https://github.com/amber-lang/Amber" target="_blank">GitHub</a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="lib/libv86.js"></script>
+  <script src="assets/main.js"></script>
+  <script>
+    const status = document.getElementById('status');
+    
+    const observer = new MutationObserver(() => {
+      const text = status.textContent.toLowerCase();
+      status.classList.remove('loading', 'ready', 'error');
+      
+      if (text.includes('ready')) {
+        status.classList.add('ready');
+      } else if (text.includes('error') || text.includes('fail')) {
+        status.classList.add('error');
+      } else if (text.includes('running')) {
+        status.classList.add('loading');
+      } else if (text.includes('booting')) {
+        status.classList.add('loading');
+      }
+    });
+    observer.observe(status, { childList: true, characterData: true, subtree: true });
+  </script>
+</body>
+</html>

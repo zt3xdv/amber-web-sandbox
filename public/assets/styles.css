@@ -1,0 +1,398 @@
+/* Amber Interpreter - Modern Styles */
+
+/* ========== Fonts ========== */
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(fonts/83afe278b6a6bb3c-s.p.3a6ba036.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: GeistSans;
+  src: url(fonts/Geist_Variable-s.p.f19e4721.woff2) format("woff2");
+  font-display: swap;
+  font-weight: 100 900;
+}
+
+@font-face {
+  font-family: "Cal Sans";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url(fonts/CalSans-SemiBold.4d9d14e3.woff2) format("woff2");
+}
+
+/* ========== Variables & Reset ========== */
+:root {
+  --bg: #160f0c;
+  --fg: #e5dad1;
+  --primary: #e0661c;
+  --primary-dark: #d5441c;
+  --accent: #e67117;
+  --border: #38271f;
+  --border-light: #4a3428;
+  --card-bg: #211f1d;
+  --editor-bg: #1a1512;
+  --success: #559720;
+  --error: #f54c4c;
+  --font-sans: GeistSans, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Cal Sans", var(--font-sans);
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  overflow: hidden auto;
+  color-scheme: dark;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+}
+
+body {
+  color: var(--fg);
+  background: var(--bg);
+  line-height: 1.5;
+}
+
+/* ========== Layout ========== */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ========== Header ========== */
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.logo-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, var(--fg), var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  color: var(--fg);
+  opacity: 0.6;
+  font-size: 1.1rem;
+  font-weight: 300;
+}
+
+/* ========== Editor ========== */
+.editor-section {
+  margin-bottom: 1.5rem;
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.editor-label {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--fg);
+}
+
+.editor-hint {
+  font-size: 0.875rem;
+  color: var(--fg);
+  opacity: 0.5;
+}
+
+.editor {
+  width: 100%;
+  min-height: 300px;
+  padding: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--fg);
+  background: var(--editor-bg);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.editor:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(224, 102, 28, 0.15);
+}
+
+.editor::placeholder {
+  color: var(--fg);
+  opacity: 0.3;
+}
+
+/* ========== Buttons ========== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--primary);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 3rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--card-bg);
+  border-color: var(--border-light);
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--accent), var(--primary));
+  box-shadow: 0 4px 20px rgba(224, 102, 28, 0.3);
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+}
+
+/* ========== Output ========== */
+.output-section {
+  margin-top: 1.5rem;
+}
+
+.output-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.output-label {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--fg);
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 1rem;
+  background: var(--border);
+  color: var(--fg);
+  opacity: 0.7;
+}
+
+.status-badge.loading {
+  background: rgba(224, 102, 28, 0.2);
+  color: var(--primary);
+  opacity: 1;
+}
+
+.status-badge.ready {
+  background: rgba(85, 151, 32, 0.2);
+  color: var(--success);
+  opacity: 1;
+}
+
+.status-badge.error {
+  background: rgba(245, 76, 76, 0.2);
+  color: var(--error);
+  opacity: 1;
+}
+
+.output {
+  min-height: 120px;
+  padding: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--fg);
+  background: #0d0908;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: auto;
+}
+
+.output:empty::before {
+  content: "Output will appear here...";
+  color: var(--fg);
+  opacity: 0.3;
+}
+
+/* ========== Boot Tip ========== */
+.boot-tip {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--fg);
+  opacity: 0.7;
+  background: rgba(224, 102, 28, 0.1);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  text-align: center;
+  animation: pulse-bg 2s ease-in-out infinite;
+}
+
+.boot-tip.hidden {
+  display: none;
+}
+
+@keyframes pulse-bg {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.output.has-error {
+  border-color: var(--error);
+}
+
+/* ========== ANSI Colors ========== */
+.ansi-bold { font-weight: bold; }
+.ansi-dim { opacity: 0.6; }
+.ansi-underline { text-decoration: underline; }
+
+.ansi-black { color: #4e4e4e; }
+.ansi-red { color: #f54c4c; }
+.ansi-green { color: #559720; }
+.ansi-yellow { color: #e5c07b; }
+.ansi-blue { color: #61afef; }
+.ansi-magenta { color: #c678dd; }
+.ansi-cyan { color: #56b6c2; }
+.ansi-white { color: #dcdfe4; }
+
+.ansi-bg-black { background-color: #4e4e4e; }
+.ansi-bg-red { background-color: #f54c4c; padding: 0.1rem 0.4rem; border-radius: 0.25rem; }
+.ansi-bg-green { background-color: #559720; padding: 0.1rem 0.4rem; border-radius: 0.25rem; }
+.ansi-bg-yellow { background-color: #e5c07b; color: #000; padding: 0.1rem 0.4rem; border-radius: 0.25rem; }
+.ansi-bg-blue { background-color: #61afef; color: #000; padding: 0.1rem 0.4rem; border-radius: 0.25rem; }
+.ansi-bg-magenta { background-color: #c678dd; color: #000; padding: 0.1rem 0.4rem; border-radius: 0.25rem; }
+.ansi-bg-cyan { background-color: #56b6c2; color: #000; padding: 0.1rem 0.4rem; border-radius: 0.25rem; }
+.ansi-bg-white { background-color: #dcdfe4; color: #000; padding: 0.1rem 0.4rem; border-radius: 0.25rem; }
+
+/* ========== Footer ========== */
+.footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--fg);
+  opacity: 0.5;
+  font-size: 0.875rem;
+}
+
+.footer a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* ========== Loading Animation ========== */
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.loading-dots {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.loading-dots span {
+  width: 6px;
+  height: 6px;
+  background: var(--primary);
+  border-radius: 50%;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+/* ========== Responsive ========== */
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .logo-text {
+    font-size: 2rem;
+  }
+  
+  .editor {
+    min-height: 200px;
+    font-size: 0.875rem;
+  }
+  
+  .btn {
+    width: 100%;
+    padding: 1rem;
+  }
+  
+  .editor-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}
