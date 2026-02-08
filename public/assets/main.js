@@ -14,46 +14,35 @@ window.onload = function()
         disable_mouse: true,
     });
 
-    fetch("dist/initial_state.bin").then(function(response) {
-        if (!response.ok) throw new Error("No state file");
-        var contentLength = response.headers.get("Content-Length");
-        if (!contentLength) {
-            status.textContent = "Downloading...";
-            return response.arrayBuffer().then(function(buf) {
-                status.textContent = "Restoring...";
-                return new Response(
-                    new Blob([buf]).stream().pipeThrough(new DecompressionStream("gzip"))
-                ).arrayBuffer();
-            });
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "dist/initial_state.bin", true);
+    xhr.responseType = "arraybuffer";
+    xhr.onprogress = function(e) {
+        if (e.lengthComputable) {
+            var pct = Math.round((e.loaded / e.total) * 100);
+            status.textContent = "Downloading... " + pct + "%";
         }
-        var total = parseInt(contentLength, 10);
-        var loaded = 0;
-        var reader = response.body.getReader();
-        var chunks = [];
-        function read() {
-            return reader.read().then(function(result) {
-                if (result.done) return;
-                chunks.push(result.value);
-                loaded += result.value.length;
-                var pct = Math.round((loaded / total) * 100);
-                status.textContent = "Downloading... " + pct + "%";
-                return read();
-            });
+    };
+    xhr.onload = function() {
+        if (xhr.status !== 200) {
+            status.textContent = "Error: No state file";
+            return;
         }
-        return read().then(function() {
-            status.textContent = "Restoring...";
-            var blob = new Blob(chunks);
-            return new Response(
-                blob.stream().pipeThrough(new DecompressionStream("gzip"))
-            ).arrayBuffer();
+        status.textContent = "Restoring...";
+        new Response(
+            new Blob([xhr.response]).stream().pipeThrough(new DecompressionStream("gzip"))
+        ).arrayBuffer().then(function(state) {
+            emulator.restore_state(state);
+            emulator.run();
+            onReady();
+        }).catch(function(err) {
+            status.textContent = "Error: " + err.message;
         });
-    }).then(function(state) {
-        emulator.restore_state(state);
-        emulator.run();
-        onReady();
-    }).catch(function(err) {
-        status.textContent = "Error: " + err.message;
-    });
+    };
+    xhr.onerror = function() {
+        status.textContent = "Error: Download failed";
+    };
+    xhr.send();
 
     var data = "";
     var do_output = false;
