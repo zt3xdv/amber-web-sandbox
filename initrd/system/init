@@ -1,7 +1,0 @@
-#!/bin/busybox sh
-/bin/busybox --install -s /bin
-mount -t proc none /proc
-mount -t sysfs none /sys
-mount -t devtmpfs none /dev
-echo "Amber Sandbox"
-exec /bin/sh

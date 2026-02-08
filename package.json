@@ -1,0 +1,8 @@
+{
+  "name": "amber-web-sandbox",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node linux/build.js"
+  }
+}
