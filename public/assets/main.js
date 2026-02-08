@@ -47,7 +47,6 @@ window.onload = function()
     var data = "";
     var do_output = false;
     var outputBuffer = "";
-    var firstLineSkipped = false;
 
     function ansiToHtml(text) {
         var ansiMap = {
@@ -72,9 +71,11 @@ window.onload = function()
 
     function updateOutput() {
         var text = outputBuffer;
-        var cmdEnd = text.indexOf("amber.sh\n");
-        if (cmdEnd !== -1) {
-            text = text.substring(cmdEnd + 9);
+        var marker = text.indexOf("<<AMB>>\n");
+        if (marker !== -1) {
+            text = text.substring(marker + 8);
+        } else {
+            text = "";
         }
         text = text.replace(/\n\/\s*#\s*$/, '').trim();
         document.getElementById("result").innerHTML = ansiToHtml(text);
@@ -88,7 +89,7 @@ window.onload = function()
             data += char;
         }
 
-        if(do_output)
+        if(do_output && char !== "\r")
         {
             outputBuffer += char;
             updateOutput();
@@ -133,7 +134,7 @@ window.onload = function()
     {
         var code = document.getElementById("source").value;
 
-        emulator.serial0_send("echo " + bashEscape(code) + " > /amber.ab && amber build /amber.ab && bash /amber.sh\n");
+        emulator.serial0_send("echo " + bashEscape(code) + " > /amber.ab && amber build /amber.ab && echo '<<AMB>>' && bash /amber.sh\n");
 
         document.getElementById("result").innerHTML = "";
         outputBuffer = "";
