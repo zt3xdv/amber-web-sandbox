@@ -24,13 +24,13 @@ window.onload = function()
         }
     };
     xhr.onload = function() {
-        if (xhr.status !== 200) {
+        if (xhr.status !== 200 && xhr.status !== 0) {
             status.textContent = "Error: No state file";
             return;
         }
         status.textContent = "Restoring...";
         new Response(
-            new Blob([xhr.response]).stream().pipeThrough(new DecompressionStream("gzip"))
+            new Response(xhr.response).body.pipeThrough(new DecompressionStream("gzip"))
         ).arrayBuffer().then(function(state) {
             emulator.restore_state(state);
             emulator.run();
