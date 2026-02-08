@@ -71,7 +71,7 @@ window.onload = function()
 
     function updateOutput() {
         var text = outputBuffer;
-        var marker = text.indexOf("<<AMB>>\n");
+        var marker = text.lastIndexOf("<<AMB>>\n");
         if (marker !== -1) {
             text = text.substring(marker + 8);
         } else {
@@ -134,7 +134,7 @@ window.onload = function()
     {
         var code = document.getElementById("source").value;
 
-        emulator.serial0_send("echo " + bashEscape(code) + " > /amber.ab && amber build /amber.ab && echo '<<AMB>>' && bash /amber.sh\n");
+        emulator.serial0_send("echo " + bashEscape(code) + " > /amber.ab; echo '<<AMB>>'; amber build /amber.ab && bash /amber.sh\n");
 
         document.getElementById("result").innerHTML = "";
         outputBuffer = "";
