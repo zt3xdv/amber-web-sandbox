@@ -3,7 +3,7 @@
 window.onload = function()
 {
     var status = document.getElementById("status");
-    status.textContent = "Restoring...";
+    status.textContent = "Downloading...";
 
     var emulator = new V86({
         wasm_path: "dist/v86.wasm",
@@ -16,9 +16,37 @@ window.onload = function()
 
     fetch("dist/initial_state.bin").then(function(response) {
         if (!response.ok) throw new Error("No state file");
-        return new Response(
-            response.body.pipeThrough(new DecompressionStream("gzip"))
-        ).arrayBuffer();
+        var contentLength = response.headers.get("Content-Length");
+        if (!contentLength) {
+            status.textContent = "Downloading...";
+            return response.arrayBuffer().then(function(buf) {
+                status.textContent = "Restoring...";
+                return new Response(
+                    new Blob([buf]).stream().pipeThrough(new DecompressionStream("gzip"))
+                ).arrayBuffer();
+            });
+        }
+        var total = parseInt(contentLength, 10);
+        var loaded = 0;
+        var reader = response.body.getReader();
+        var chunks = [];
+        function read() {
+            return reader.read().then(function(result) {
+                if (result.done) return;
+                chunks.push(result.value);
+                loaded += result.value.length;
+                var pct = Math.round((loaded / total) * 100);
+                status.textContent = "Downloading... " + pct + "%";
+                return read();
+            });
+        }
+        return read().then(function() {
+            status.textContent = "Restoring...";
+            var blob = new Blob(chunks);
+            return new Response(
+                blob.stream().pipeThrough(new DecompressionStream("gzip"))
+            ).arrayBuffer();
+        });
     }).then(function(state) {
         emulator.restore_state(state);
         emulator.run();

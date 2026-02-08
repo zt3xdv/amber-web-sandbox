@@ -42,9 +42,9 @@
     <section class="output-section">
       <div class="output-header">
         <span class="output-label">Output</span>
-        <span id="status" class="status-badge loading">Booting...</span>
+        <span id="status" class="status-badge loading">Downloading...</span>
       </div>
-      <p id="boot-tip" class="boot-tip">Booting a Linux VM in your browser to run Amber...</p>
+      <p id="boot-tip" class="boot-tip hidden"></p>
       <pre id="result" class="output"></pre>
     </section>
 
@@ -73,7 +73,7 @@
         status.classList.add('error');
       } else if (text.includes('running')) {
         status.classList.add('loading');
-      } else if (text.includes('booting')) {
+      } else if (text.includes('downloading')) {
         status.classList.add('loading');
       }
     });
